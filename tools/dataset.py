@@ -9,6 +9,7 @@ import sys
 from PIL import Image
 import numpy as np
 
+
 class lmdbDataset(Dataset):
 
     def __init__(self, root=None, transform=None, reverse=False, alphabet='0123456789abcdefghijklmnopqrstuvwxyz'):
@@ -54,15 +55,15 @@ class lmdbDataset(Dataset):
             label_key = 'label-%09d' % index
             label = str(txn.get(label_key.encode()).decode('utf-8'))
 
-            label = ''.join(label[i] if label[i].lower() in self.alphabet else '' 
-                for i in range(len(label)))
+            label = ''.join(label[i] if label[i].lower() in self.alphabet else ''
+                            for i in range(len(label)))
             if len(label) <= 0:
                 return self[index + 1]
             if self.reverse:
                 label_rev = label[-1::-1]
                 label_rev += '$'
             label += '$'
-            
+
             if self.transform is not None:
                 img = self.transform(img)
 
@@ -84,6 +85,7 @@ class resizeNormalize(object):
         img = self.toTensor(img)
         img.sub_(0.5).div_(0.5)
         return img
+
 
 class randomSequentialSampler(sampler.Sampler):
 

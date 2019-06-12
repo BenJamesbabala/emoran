@@ -3,6 +3,7 @@ import torch.nn as nn
 from torch.autograd import Variable
 import collections
 
+
 class strLabelConverterForAttention(object):
     """Convert between str and label.
 
@@ -91,11 +92,13 @@ class strLabelConverterForAttention(object):
         """
         if length.numel() == 1:
             length = length[0]
-            assert t.numel() == length, "text with length: {} does not match declared length: {}".format(t.numel(), length)
+            assert t.numel() == length, "text with length: {} does not match declared length: {}".format(t.numel(),
+                                                                                                         length)
             return ''.join([self.alphabet[i] for i in t])
         else:
             # batch mode
-            assert t.numel() == length.sum(), "texts with length: {} does not match declared length: {}".format(t.numel(), length.sum())
+            assert t.numel() == length.sum(), "texts with length: {} does not match declared length: {}".format(
+                t.numel(), length.sum())
             texts = []
             index = 0
             for i in range(length.numel()):
@@ -105,6 +108,7 @@ class strLabelConverterForAttention(object):
                         t[index:index + l], torch.LongTensor([l])))
                 index += l
             return texts
+
 
 class averager(object):
     """Compute average for `torch.Variable` and `torch.Tensor`. """
@@ -132,6 +136,7 @@ class averager(object):
         if self.n_count != 0:
             res = self.sum / float(self.n_count)
         return res
+
 
 def loadData(v, data):
     v.data.resize_(data.size()).copy_(data)
