@@ -7,8 +7,8 @@ from collections import OrderedDict
 # import cv2
 from models.moran import MORAN
 
-model_path = 'demo.pth'
-img_path = './demo/1.png'
+model_path = 'output/1000_0.6.pth'
+# img_path = './demo/1.png'
 alphabet = '0:1:2:3:4:5:6:7:8:9:a:b:c:d:e:f:g:h:i:j:k:l:m:n:o:p:q:r:s:t:u:v:w:x:y:z:$'
 
 cuda_flag = False
@@ -62,8 +62,9 @@ def demo(image_path):
     utils.loadData(text, t)
     utils.loadData(length, l)
     output = MORAN(image, length, text, text, test=True, debug=True)
-
+    # output image
     preds, preds_reverse = output[0]
+    # 中间输出：moran
     demo = output[1]
 
     _, preds = preds.max(1)
@@ -89,7 +90,6 @@ def bijiao(str1="", str2=""):
 
 
 if __name__ == '__main__':
-    import os
     from os.path import join
 
     i = 0
@@ -106,7 +106,7 @@ if __name__ == '__main__':
 
         j += bijiao(name[1], predict)
         i += 1
-        print('正确的数量>>>>', j, "\n\n\n")
+        print('总数>>>>', i, '正确的数量>>>>', j, "\n\n\n")
     print("acc>>>>", j / i)
     # demo(img_path)
     # cv2.imshow("demo", demo)
@@ -118,3 +118,7 @@ if __name__ == '__main__':
     # ic15 1811 0.778575%
     # svt 86%
     # svt-p 78.6%
+    # exp 1:53.9 svt-p:0.47131782945736433
+    # exp 2:60.0 svt-p:0.5720930232558139
+    # Version	IIIT5K	SVT 	IC03	IC13	SVT-P	CUTE80	IC15 (1811)	IC15 (2077)
+    # MORAN v2 	93.4	88.3    94.2     93.2	79.7	81.9	77.8	    73.9

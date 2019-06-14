@@ -14,9 +14,11 @@ class MORAN(nn.Module):
         self.ASRN = ASRN(targetH, nc, nclass, nh, BidirDecoder, CUDA)
         self.STN = stn()
 
-    def forward(self, x, length=torch.IntTensor(16), text=torch.LongTensor(16 * 5), text_rev=torch.LongTensor(16 * 5), test=False,
+    def forward(self, x, length=torch.IntTensor(16), text=torch.LongTensor(16 * 5),
+                text_rev=torch.LongTensor(16 * 5), test=False,
                 debug=False):
         if debug:
+            x = self.STN(x)
             x_rectified, demo = self.MORN(x, test, debug=debug)
             preds = self.ASRN(x_rectified, length, text, text_rev, test)
             return preds, demo

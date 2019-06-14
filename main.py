@@ -175,8 +175,8 @@ def val(dataset, criterion, max_iter=1000):
             sim_preds = []
             for j in range(cpu_images.size(0)):
                 text_begin = 0 if j == 0 else length.data[:j].sum()
-                if torch.mean(preds0_prob[text_begin:text_begin + len(sim_preds0[j].split('$')[0] + '$')]).data[0] > \
-                        torch.mean(preds1_prob[text_begin:text_begin + len(sim_preds1[j].split('$')[0] + '$')]).data[0]:
+                if torch.mean(preds0_prob[text_begin:text_begin + len(sim_preds0[j].split('$')[0] + '$')]).data > \
+                        torch.mean(preds1_prob[text_begin:text_begin + len(sim_preds1[j].split('$')[0] + '$')]).data:
                     sim_preds.append(sim_preds0[j].split('$')[0] + '$')
                 else:
                     sim_preds.append(sim_preds1[j].split('$')[0][-1::-1] + '$')
@@ -232,12 +232,14 @@ def trainBatch():
     return cost
 
 
-t0 = time.time()
+name = t0 = time.time()
 acc = 0
 acc_tmp = 0
+
+train_iter = iter(train_loader)
+
 for epoch in range(opt.niter):
 
-    train_iter = iter(train_loader)
     i = 0
     while i < len(train_loader):
 
@@ -247,6 +249,8 @@ for epoch in range(opt.niter):
             MORAN.eval()
 
             acc_tmp = val(test_dataset, criterion)
+            # with open("loss/" + str(name) + ".txt", "a+") as f:
+            #     f.write(str(acc_tmp) + '\n')
             if acc_tmp > acc:
                 acc = acc_tmp
                 torch.save(MORAN.state_dict(), '{0}/{1}_{2}.pth'.format(
